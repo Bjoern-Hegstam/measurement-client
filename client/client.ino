@@ -3,31 +3,32 @@
 
 #include <ESP8266HTTPClient.h>
 
-const char * SENSOR_NAME = "Sensor 1";
-
 const char * SSID = "ssid";
-const char * WIFI_PASSWORD = "password"
+const char * WIFI_PASSWORD = "password";
 
-const char * SERVER_URL = "https://192.168.1.3";
+const String SERVER_URL = "https://192.168.1.3";
+const String SENSOR_NAME = "Sensor 1";
+
+ESP8266WiFiMulti WiFiMulti;
 
 void setup() {
     Serial.begin(115200);
-    Serial.println("Setup start")
+    Serial.println("Setup start");
     
-    prepareWifi()
+    prepareWifi();
     
     Serial.println("Setup end");
 }
 
 void prepareWifi() {
-    WifiMulti.addAP(SSID, WIFI_PASSWORD);
+    WiFiMulti.addAP(SSID, WIFI_PASSWORD);
 }
 
 void loop() {
-    if (WifiMulti.run() == WL_CONNECTED) {
+    if (WiFiMulti.run() == WL_CONNECTED) {
         double soilVal = getSoilMeasurement();
         
-        sendToServer(soilVal)
+        sendToServer(soilVal);
     }
 }
 
@@ -38,7 +39,7 @@ double getSoilMeasurement() {
     return 42.17;
 }
 
-void sendToServer(sensorVal) {
+void sendToServer(double sensorVal) {
     Serial.println("Sending value to server");
     
     HTTPClient http;
@@ -46,24 +47,24 @@ void sendToServer(sensorVal) {
     
     http.begin(SERVER_URL + "/api/measurements");
     http.addHeader("Content-Type", "application/json");
-    http.post(formatPayload(sensorVal));
+    http.POST(formatPayload(sensorVal));
     http.end();
 }
 
-const char * formatPayload(sensorVal) {
+String formatPayload(double sensorVal) {
     return "{" + 
     json_str_attr("source", SENSOR_NAME) +
-    json_num_attr("timestampMillis", "1337") + 
+    json_num_attr("timestampMillis", 1337) + 
     json_str_attr("type", "soil_moisture") + 
     json_num_attr("value", sensorVal) + 
     json_str_attr("unit", "unit") + 
     "}";
 }
 
-const char * json_str_attr(name, value) {
+String json_str_attr(String name, String value) {
     return "\"" + name + "\": " + "\"" + value + "\" ";
 }
 
-const char * json_num_attr(name, value) {
+String json_num_attr(String name, double value) {
     return "\"" + name + "\": " + "\"" + value + "\" ";
 }
