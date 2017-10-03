@@ -6,8 +6,9 @@
 const char * SSID = "ssid";
 const char * WIFI_PASSWORD = "password";
 
-const String SERVER_URL = "https://192.168.1.3";
+const String SERVER_URL = "192.168.1.3";
 const String SENSOR_NAME = "Sensor 1";
+const int SERVER_PORT = 4567;
 
 ESP8266WiFiMulti WiFiMulti;
 
@@ -30,6 +31,8 @@ void loop() {
         
         sendToServer(soilVal);
     }
+
+    delay(4000);
 }
 
 double getSoilMeasurement() {
@@ -45,26 +48,27 @@ void sendToServer(double sensorVal) {
     HTTPClient http;
     Serial.println("Http begin");
     
-    http.begin(SERVER_URL + "/api/measurements");
+    http.begin(SERVER_URL, SERVER_PORT, "/api/measurement/");
     http.addHeader("Content-Type", "application/json");
-    http.POST(formatPayload(sensorVal));
+    int httpCode = http.POST(formatPayload(sensorVal));
     http.end();
+    Serial.println(httpCode);
 }
 
 String formatPayload(double sensorVal) {
     return "{" + 
-    json_str_attr("source", SENSOR_NAME) +
-    json_num_attr("timestampMillis", 1337) + 
-    json_str_attr("type", "soil_moisture") + 
-    json_num_attr("value", sensorVal) + 
+    json_str_attr("source", SENSOR_NAME) + ", " +
+    json_num_attr("timestampMillis", 1337) + ", " +
+    json_str_attr("type", "soil_moisture") + ", " +
+    json_num_attr("value", sensorVal) + ", " +
     json_str_attr("unit", "unit") + 
     "}";
 }
 
 String json_str_attr(String name, String value) {
-    return "\"" + name + "\": " + "\"" + value + "\" ";
+    return "\"" + name + "\": " + "\"" + value + "\"";
 }
 
 String json_num_attr(String name, double value) {
-    return "\"" + name + "\": " + "\"" + value + "\" ";
+    return "\"" + name + "\": " + "\"" + value + "\"";
 }
