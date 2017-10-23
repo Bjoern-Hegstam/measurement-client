@@ -10,6 +10,9 @@ const String SERVER_URL = "192.168.1.3";
 const String SENSOR_NAME = "Sensor 1";
 const int SERVER_PORT = 4567;
 
+const int MEASURE_POWER = 16; // D0
+const int MEASURE_IN = 0; // A0
+
 ESP8266WiFiMulti WiFiMulti;
 
 void setup() {
@@ -18,6 +21,9 @@ void setup() {
     
     prepareWifi();
     
+    pinMode(MEASURE_POWER, OUTPUT);
+    pinMode(MEASURE_IN, INPUT);
+
     Serial.println("Setup end");
 }
 
@@ -36,10 +42,17 @@ void loop() {
 }
 
 double getSoilMeasurement() {
-    // TODO: Read actual value from sensor
     Serial.println("Reading soil value");
-    
-    return 42.17;
+    digitalWrite(MEASURE_POWER, HIGH);
+    delay(100);
+
+    int val = analogRead(MEASURE_IN);
+    Serial.println(val);
+
+    Serial.println("Disabling power to sensor");
+    digitalWrite(MEASURE_POWER, LOW);
+
+    return val;
 }
 
 void sendToServer(double sensorVal) {
