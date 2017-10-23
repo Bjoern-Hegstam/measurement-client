@@ -58,9 +58,8 @@ void sendToServer(double sensorVal) {
 String formatPayload(double sensorVal) {
     return "{" + 
     json_str_attr("source", SENSOR_NAME) + ", " +
-    json_num_attr("timestampMillis", 1337) + ", " +
     json_str_attr("type", "soil_moisture") + ", " +
-    json_num_attr("value", sensorVal) + ", " +
+    json_double_attr("value", sensorVal) + ", " +
     json_str_attr("unit", "unit") + 
     "}";
 }
@@ -69,6 +68,6 @@ String json_str_attr(String name, String value) {
     return "\"" + name + "\": " + "\"" + value + "\"";
 }
 
-String json_num_attr(String name, double value) {
+String json_double_attr(String name, double value) {
     return "\"" + name + "\": " + "\"" + value + "\"";
 }
