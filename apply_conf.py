@@ -22,9 +22,9 @@ def main():
 
 def parse_args():
     parser = argparse.ArgumentParser()
-    parser.add_argument('script', help='Script to apply configuration to')
-    parser.add_argument('sensor_name')
     parser.add_argument('config', help='Configuration file')
+    parser.add_argument('sensor_name')
+    parser.add_argument('script', help='Script to apply configuration to')
     return parser.parse_args()
 
 
