@@ -3,12 +3,12 @@
 
 #include <ESP8266HTTPClient.h>
 
-const char * SSID = "ssid";
-const char * WIFI_PASSWORD = "password";
+const char * SSID = "${WIFI_SSID}";
+const char * WIFI_PASSWORD = "${WIFI_PASSWORD}";
 
-const String SERVER_URL = "192.168.1.3";
-const String SENSOR_NAME = "Sensor 1";
-const int SERVER_PORT = 4567;
+const String SERVER_URL = "${SERVER_URL}";
+const String SENSOR_NAME = "${SENSOR_NAME}";
+const int SERVER_PORT = "${SERVER_PORT}";
 
 const int MEASURE_POWER = 16; // D0
 const int MEASURE_IN = 0; // A0
