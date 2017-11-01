@@ -1,4 +1,4 @@
-conf.ini
+*.ini
 
 __pycache__
 target

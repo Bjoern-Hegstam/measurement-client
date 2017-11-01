@@ -8,10 +8,13 @@ const char * WIFI_PASSWORD = "${WIFI_PASSWORD}";
 
 const String SERVER_URL = "${SERVER_URL}";
 const String SENSOR_NAME = "${SENSOR_NAME}";
-const int SERVER_PORT = "${SERVER_PORT}";
+const int SERVER_PORT = ${SERVER_PORT};
 
 const int MEASURE_POWER = 16; // D0
 const int MEASURE_IN = 0; // A0
+
+const int SAMPLE_COUNT = 8;
+const double SAMPLE_WEIGHTS[] = {16, 16, 8, 2 , 2, 8, 16, 16};
 
 ESP8266WiFiMulti WiFiMulti;
 
@@ -44,9 +47,13 @@ void loop() {
 double getSoilMeasurement() {
     Serial.println("Reading soil value");
     digitalWrite(MEASURE_POWER, HIGH);
-    delay(100);
+    delay(10);
 
-    int val = analogRead(MEASURE_IN);
+    double sum = 0;
+    for (int i = 0; i < SAMPLE_COUNT; i++) {
+        sum += analogRead(MEASURE_IN) / SAMPLE_WEIGHTS[i];
+    }
+    int val = (int) sum;
     Serial.println(val);
 
     Serial.println("Disabling power to sensor");
