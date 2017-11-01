@@ -10,7 +10,7 @@ const String SERVER_URL = "${SERVER_URL}";
 const String SENSOR_NAME = "${SENSOR_NAME}";
 const int SERVER_PORT = ${SERVER_PORT};
 
-const int MEASURE_POWER = 16; // D0
+const int MEASURE_POWER = 5; // D1
 const int MEASURE_IN = 0; // A0
 
 const int SAMPLE_COUNT = 8;
