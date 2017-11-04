@@ -68,7 +68,7 @@ void sendToServer(double sensorVal) {
     HTTPClient http;
     Serial.println("Http begin");
     
-    http.begin(SERVER_URL, SERVER_PORT, "/api/measurement/");
+    http.begin(SERVER_URL, SERVER_PORT, "/api/measurements");
     http.addHeader("Content-Type", "application/json");
     int httpCode = http.POST(formatPayload(sensorVal));
     http.end();
