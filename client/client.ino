@@ -10,8 +10,8 @@ const String SERVER_URL = "${SERVER_URL}";
 const String SENSOR_NAME = "${SENSOR_NAME}";
 const int SERVER_PORT = ${SERVER_PORT};
 
-const int MEASURE_POWER = 5; // D1
-const int MEASURE_IN = 0; // A0
+const int MEASURE_POWER_PIN = 5; // D1
+const int MEASURE_PIN = 0; // A0
 
 const int DEBUG_MODE_PIN = 13; // D7
 
@@ -28,8 +28,8 @@ void setup() {
     
     connectWifi();
 
-    pinMode(MEASURE_POWER, OUTPUT);
-    pinMode(MEASURE_IN, INPUT);
+    pinMode(MEASURE_POWER_PIN, OUTPUT);
+    pinMode(MEASURE_PIN, INPUT);
     pinMode(DEBUG_MODE_PIN, INPUT);
 
     loadDebugConfig();
@@ -66,18 +66,18 @@ void loop() {
 
 double getSoilMeasurement() {
     Serial.println("Reading soil value");
-    digitalWrite(MEASURE_POWER, HIGH);
+    digitalWrite(MEASURE_POWER_PIN, HIGH);
     delay(10);
 
     double sum = 0;
     for (int i = 0; i < SAMPLE_COUNT; i++) {
-        sum += analogRead(MEASURE_IN) / SAMPLE_WEIGHTS[i];
+        sum += analogRead(MEASURE_PIN) / SAMPLE_WEIGHTS[i];
     }
     int val = (int) sum;
     Serial.println(val);
 
     Serial.println("Disabling power to sensor");
-    digitalWrite(MEASURE_POWER, LOW);
+    digitalWrite(MEASURE_POWER_PIN, LOW);
 
     return val;
 }
