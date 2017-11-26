@@ -13,21 +13,38 @@ const int SERVER_PORT = ${SERVER_PORT};
 const int MEASURE_POWER = 5; // D1
 const int MEASURE_IN = 0; // A0
 
+const int DEBUG_MODE_PIN = 13; // D7
+
 const int SAMPLE_COUNT = 8;
 const double SAMPLE_WEIGHTS[] = {16, 16, 8, 2 , 2, 8, 16, 16};
 
 ESP8266WiFiMulti WiFiMulti;
+
+int debugEnabled = 0;
 
 void setup() {
     Serial.begin(115200);
     Serial.println("Setup start");
     
     connectWifi();
-    
+
     pinMode(MEASURE_POWER, OUTPUT);
     pinMode(MEASURE_IN, INPUT);
+    pinMode(DEBUG_MODE_PIN, INPUT);
+
+    loadDebugConfig();
 
     Serial.println("Setup end");
+}
+
+void loadDebugConfig() {
+    debugEnabled = digitalRead(DEBUG_MODE_PIN);
+    Serial.print("Debug enabled: ");
+    if (debugEnabled == HIGH) {
+        Serial.println("1");
+    } else {
+        Serial.println("0");
+    }
 }
 
 void connectWifi() {
