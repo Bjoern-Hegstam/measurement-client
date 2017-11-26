@@ -22,7 +22,7 @@ void setup() {
     Serial.begin(115200);
     Serial.println("Setup start");
     
-    prepareWifi();
+    connectWifi();
     
     pinMode(MEASURE_POWER, OUTPUT);
     pinMode(MEASURE_IN, INPUT);
@@ -30,18 +30,21 @@ void setup() {
     Serial.println("Setup end");
 }
 
-void prepareWifi() {
-    WiFiMulti.addAP(SSID, WIFI_PASSWORD);
+void connectWifi() {
+    WiFi.begin(SSID, WIFI_PASSWORD);
+    while (WiFi.status() != WL_CONNECTED) {
+        delay(500);
+        Serial.print(".");
+    }
+    Serial.println("");
+    Serial.println("WiFi connected");
 }
 
 void loop() {
-    if (WiFiMulti.run() == WL_CONNECTED) {
-        double soilVal = getSoilMeasurement();
-        
-        sendToServer(soilVal);
-    }
+    double soilVal = getSoilMeasurement();
+    sendToServer(soilVal);
 
-    delay(4000);
+    ESP.deepSleep(${DEEP_SLEEP_MS});
 }
 
 double getSoilMeasurement() {
