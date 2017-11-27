@@ -7,8 +7,12 @@ const char * SSID = "${WIFI_SSID}";
 const char * WIFI_PASSWORD = "${WIFI_PASSWORD}";
 
 const String SERVER_URL = "${SERVER_URL}";
-const String SENSOR_NAME = "${SENSOR_NAME}";
 const int SERVER_PORT = ${SERVER_PORT};
+
+const String DEBUG_SERVER_URL = "${DEBUG_SERVER_URL}";
+const int DEBUG_SERVER_PORT = ${DEBUG_SERVER_PORT};
+
+const String SENSOR_NAME = "${SENSOR_NAME}";
 
 const int MEASURE_POWER_PIN = 5; // D1
 const int MEASURE_PIN = 0; // A0
@@ -61,7 +65,11 @@ void loop() {
     double soilVal = getSoilMeasurement();
     sendToServer(soilVal);
 
-    ESP.deepSleep(${DEEP_SLEEP_MS});
+    if (debugEnabled) {
+        ESP.deepSleep(20e6);
+    } else {
+        ESP.deepSleep(${DEEP_SLEEP_MS});
+    }
 }
 
 double getSoilMeasurement() {
@@ -88,7 +96,11 @@ void sendToServer(double sensorVal) {
     HTTPClient http;
     Serial.println("Http begin");
     
-    http.begin(SERVER_URL, SERVER_PORT, "/api/measurements");
+    if (debugEnabled) {
+        http.begin(DEBUG_SERVER_URL, DEBUG_SERVER_PORT, "/api/measurements");
+    } else {
+        http.begin(SERVER_URL, SERVER_PORT, "/api/measurements");
+    }
     http.addHeader("Content-Type", "application/json");
     int httpCode = http.POST(formatPayload(sensorVal));
     http.end();
