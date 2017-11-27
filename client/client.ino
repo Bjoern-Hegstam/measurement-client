@@ -65,6 +65,7 @@ void loop() {
     double soilVal = getSoilMeasurement();
     sendToServer(soilVal);
 
+    Serial.println("Going into deep sleep");
     if (debugEnabled) {
         ESP.deepSleep(20e6);
     } else {
@@ -104,7 +105,7 @@ void sendToServer(double sensorVal) {
     http.addHeader("Content-Type", "application/json");
     int httpCode = http.POST(formatPayload(sensorVal));
     http.end();
-    Serial.println(httpCode);
+    Serial.println("Server response: " + httpCode);
 }
 
 String formatPayload(double sensorVal) {
